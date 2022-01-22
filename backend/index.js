@@ -1,11 +1,9 @@
-const express = require('express');
-const app = express();
+const { ApolloServer } = require('apollo-server');
+const { typeDefs, resolvers } = require('./src/graphql/schemas/index');
 
+const server = new ApolloServer({ typeDefs, resolvers });
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-})
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
+});
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
-    });
