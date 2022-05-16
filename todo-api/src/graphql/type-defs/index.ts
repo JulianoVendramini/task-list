@@ -1,6 +1,6 @@
 import { mergeTypeDefs } from '@graphql-tools/merge'
 
 import baseTypes from './base'
-import userTypes from './user'
+import taskTypes from './task'
 
-export default mergeTypeDefs([baseTypes, userTypes])
+export default mergeTypeDefs([baseTypes, taskTypes])
