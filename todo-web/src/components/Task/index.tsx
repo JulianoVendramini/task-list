@@ -13,7 +13,7 @@ type Props = {
 const Task = ({ task, handleClick, handleRemove }: Props) => {
   return (
     <S.Wrapper>
-      <S.Title isDone={task.done} onClick={() => handleClick(task.id)}>
+      <S.Title isDone={task.isDone} onClick={() => handleClick(task.id)}>
         {task.title}
       </S.Title>
       <S.ActionButtonWrapper>
