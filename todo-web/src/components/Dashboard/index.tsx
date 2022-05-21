@@ -1,46 +1,21 @@
+import { useQuery } from '@apollo/client'
+import { TASKS_QUERY } from '../../graphql/queries/task'
+
 import Header from '../Header'
 import TaskList from '../TaskList'
 
 import * as S from './styles'
 
-const estudosTasks = [
-  {
-    id: 1,
-    title: 'Lavar o banheiro',
-    done: true
-  },
-  {
-    id: 2,
-    title: 'Arrumar o quarto',
-    done: true
-  },
-  {
-    id: 3,
-    title: 'Lavar louça',
-    done: false
-  }
-]
-
-const trabalhoTasks = [
-  {
-    id: 1,
-    title: 'Fazer tela de login',
-    done: true
-  },
-  {
-    id: 2,
-    title: 'Arrumar tela de signup',
-    done: false
-  }
-]
-
 const Dashboard = () => {
+  const { data: { tasks } = { tasks: [] }, loading } = useQuery(TASKS_QUERY)
+
+  console.log(tasks)
+
   return (
     <S.Wrapper>
       <Header />
       <S.TasksWrapper>
-        <TaskList title="Estudos" tasks={estudosTasks} />
-        <TaskList title="Trabalho" tasks={trabalhoTasks} />
+        <TaskList title="Estudos" tasks={tasks} loading={loading} />
       </S.TasksWrapper>
     </S.Wrapper>
   )
