@@ -7,7 +7,7 @@ import TaskList from '../TaskList'
 import * as S from './styles'
 
 const Dashboard = () => {
-  const { data: { tasks } = { tasks: [] }, loading } = useQuery(TASKS_QUERY)
+  const { data: { tasks } = { tasks: [] } } = useQuery(TASKS_QUERY)
 
   console.log(tasks)
 
@@ -15,7 +15,7 @@ const Dashboard = () => {
     <S.Wrapper>
       <Header />
       <S.TasksWrapper>
-        <TaskList title="Estudos" tasks={tasks} loading={loading} />
+        <TaskList title="Estudos" tasks={tasks} />
       </S.TasksWrapper>
     </S.Wrapper>
   )
