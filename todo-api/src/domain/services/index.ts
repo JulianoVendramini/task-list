@@ -1,3 +1,6 @@
 export * from './create-task'
 export * from './list-tasks'
 export * from './delete-task'
+export * from './create-tasks-list'
+export * from './list-tasks-list'
+export * from './delete-tasks-list'
