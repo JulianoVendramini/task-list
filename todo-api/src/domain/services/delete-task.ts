@@ -9,7 +9,8 @@ export namespace DeleteTaskService {
 export class DeleteTaskService {
   constructor(private readonly taskRepository: TaskRepository) {}
 
-  async delete(id: number): Promise<boolean> {
-    return await this.taskRepository.deleteTask(id)
+  async delete(id: number) {
+    await this.taskRepository.deleteTask(id)
+    return true
   }
 }

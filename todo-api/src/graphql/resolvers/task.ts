@@ -32,8 +32,6 @@ export default {
   },
   Mutation: {
     createTask: async (_, { task }) => makeCreateTask().create(task),
-    deleteTask: async (_, { id }) => {
-      makeDeleteTask().delete(id)
-    }
+    deleteTask: async (_, { id }) => makeDeleteTask().delete(id)
   }
 }

@@ -5,10 +5,12 @@ export default gql`
     id: Int
     title: String
     isDone: Boolean
+    tasksListId: Int
   }
 
   input TaskInput {
     title: String!
+    tasksListId: Int!
   }
 
   extend type Query {

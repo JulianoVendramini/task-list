@@ -1,3 +1,4 @@
-import userResolver from './task'
+import taskResolver from './task'
+import tasksListResolver from './tasks-list'
 
-export default [userResolver]
+export default [taskResolver, tasksListResolver]
