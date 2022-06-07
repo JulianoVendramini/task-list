@@ -1,6 +1,8 @@
 import {
+  CheckTaskService,
   CreateTaskService,
   DeleteTaskService,
+  EditTaskService,
   ListTasksService
 } from '@/domain/services'
 import { TaskRepository } from '@/infra/repositories'
@@ -19,6 +21,20 @@ const makeDeleteTask = () => {
   return deleteTaskService
 }
 
+const makeEditTask = () => {
+  const taskRepository = new TaskRepository()
+  const editTaskService = new EditTaskService(taskRepository)
+
+  return editTaskService
+}
+
+const makeCheckTask = () => {
+  const taskRepository = new TaskRepository()
+  const checkTaskService = new CheckTaskService(taskRepository)
+
+  return checkTaskService
+}
+
 const makeListTasks = () => {
   const taskRepository = new TaskRepository()
   const listTasksService = new ListTasksService(taskRepository)
@@ -28,10 +44,12 @@ const makeListTasks = () => {
 
 export default {
   Query: {
-    tasks: async () => makeListTasks().list()
+    list: async (_, { tasksListid }) => makeListTasks().list({ tasksListid })
   },
   Mutation: {
     createTask: async (_, { task }) => makeCreateTask().create(task),
-    deleteTask: async (_, { id }) => makeDeleteTask().delete(id)
+    deleteTask: async (_, { id }) => makeDeleteTask().delete(id),
+    editTask: async (_, { task }) => makeEditTask().edit(task),
+    checkTask: async (_, { task }) => makeCheckTask().edit(task)
   }
 }
