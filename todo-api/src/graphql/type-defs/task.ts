@@ -9,14 +9,27 @@ export default gql`
 
   input TaskInput {
     title: String!
+    tasksListId: Int!
+  }
+
+  input EditTaskInput {
+    id: Int
+    title: String
+  }
+
+  input CheckTaskInput {
+    id: Int
+    isDone: Boolean
   }
 
   extend type Query {
-    tasks: [Task]
+    list(tasksListid: Int!): [Task]
   }
 
   extend type Mutation {
     createTask(task: TaskInput): Task
-    deleteTask(id: Int!): Boolean
+    deleteTask(id: Int): Boolean
+    editTask(task: EditTaskInput): Task
+    checkTask(task: CheckTaskInput): Task
   }
 `

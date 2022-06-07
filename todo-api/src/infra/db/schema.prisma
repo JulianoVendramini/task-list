@@ -10,8 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model TasksList {
+  id    Int    @id @default(autoincrement())
+  name  String
+  tasks Task[]
+}
+
 model Task {
   id     Int     @id @default(autoincrement())
   title  String
   isDone Boolean @default(false)
+
+  TasksList   TasksList? @relation(fields: [tasksListId], references: [id])
+  tasksListId Int?
 }

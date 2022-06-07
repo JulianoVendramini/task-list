@@ -4,6 +4,7 @@ import { Task } from '../entities'
 export namespace CreateTaskService {
   export type Params = {
     title: string
+    tasksListId: number
   }
 
   export type Result = Task
