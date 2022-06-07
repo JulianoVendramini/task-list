@@ -3,3 +3,9 @@ export type TaskProps = {
   title: string
   isDone: boolean
 }
+
+export type TasksListProps = {
+  id: number
+  name: string
+  tasks: TaskProps[]
+}
