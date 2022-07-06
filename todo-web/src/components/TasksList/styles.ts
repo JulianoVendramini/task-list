@@ -2,14 +2,13 @@ import styled from 'styled-components'
 import theme from '../../styles/theme'
 
 export const Wrapper = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 30rem;
-  min-height: 40rem;
+  height: 40rem;
+  width: 40rem;
   border-radius: 1.8rem;
-  background: white;
+  background: ${theme.colors.grey};
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 `
 
@@ -18,13 +17,15 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3rem 2rem;
-  border-bottom: 1px solid ${theme.colors.lightBlue};
+  padding: 2rem;
 `
 
-export const Title = styled.h2`
-  font-size: 2.8rem;
+export const Input = styled.input`
+  font-size: 2.4rem;
   color: #575bde;
+  border: none;
+  outline: none;
+  background: transparent;
 `
 
 export const TasksCount = styled.span`
@@ -32,24 +33,18 @@ export const TasksCount = styled.span`
   color: ${theme.colors.lightBlue};
 `
 
-export const AddNewtaskButton = styled.button`
+export const TasksWrapper = styled.div`
+  width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: absolute;
-  bottom: -2.5rem;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 5rem;
-  height: 5rem;
-  border-radius: 50%;
-  background: #575bde;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  font-size: 2.2rem;
-  color: white;
+  padding: 0.5rem 1rem;
+
+  & > *:not(:first-child) {
+    margin-top: 1rem;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
 `

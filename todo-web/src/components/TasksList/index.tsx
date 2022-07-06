@@ -1,95 +1,99 @@
+import { useState } from 'react'
+
 import Task from '../Task'
+import AddButton from '../AddButton'
+import Modal from '../Modal'
+import ModalInputContent from '../ModalInputContent'
 
 import { BsPlusLg } from 'react-icons/bs'
+import { toast } from 'react-toastify'
 
 import { TaskProps } from '../../types/task'
 import { useMutation } from '@apollo/client'
-import {
-  CHECK_TASK_MUTATION,
-  CREATE_TASK_MUTATION,
-  DELETE_TASK_MUTATION,
-  EDIT_TASK_MUTATION
-} from '../../graphql/mutations/task'
+import { CREATE_TASK_MUTATION } from '../../graphql/mutations/task'
 import { TASKS_LIST_QUERY } from '../../graphql/queries/tasks-list'
 
 import * as S from './styles'
 
 type Props = {
   id: number
-  title: string
+  name: string
+  isNewTasksList: boolean
   tasks: TaskProps[]
 }
 
-const TasksList = ({ id, title, tasks }: Props) => {
-  const [createTask] = useMutation(CREATE_TASK_MUTATION)
-  const [deleteTask] = useMutation(DELETE_TASK_MUTATION)
-  const [editTask] = useMutation(EDIT_TASK_MUTATION)
-  const [checkTask] = useMutation(CHECK_TASK_MUTATION)
+const TasksList = ({ id, name, tasks }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [inputValue, setInputValue] = useState('')
 
-  const totalTasks = tasks.length
+  const [createTask, { loading: creatingTask }] =
+    useMutation(CREATE_TASK_MUTATION)
 
-  const handleCheck = (id: number, isDone: boolean) => {
-    checkTask({
-      variables: {
-        task: {
-          id,
-          isDone
-        }
-      }
-    })
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)
   }
 
-  const handleRemove = (id: number) => {
-    deleteTask({
-      variables: { deleteTaskId: id },
-      refetchQueries: [{ query: TASKS_LIST_QUERY }]
-    })
+  const handleOpenModal = () => {
+    setIsModalOpen(true)
   }
 
-  const handleUpdate = (id: number) => {
-    editTask({
-      variables: {
-        task: {
-          id,
-          title: 'new title'
-        }
-      }
-    })
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
   }
 
-  const handleCreateNewTask = async () => {
+  const handleCreateNewTask = async (title: string) => {
     await createTask({
       variables: {
         task: {
-          title: 'Nova tarefa',
+          title,
           tasksListId: id
         }
       },
+      onError: (err) => {
+        toast.error(`Error: ${err.message}`)
+      },
+      onCompleted: () => {
+        toast.success('Task created successfully')
+      },
       refetchQueries: [{ query: TASKS_LIST_QUERY }]
     })
+
+    handleCloseModal()
+    setInputValue('')
   }
+
+  const totalTasks = tasks.length
+  const inputIsEmpty = inputValue.trim().length === 0
 
   return (
     tasks && (
       <S.Wrapper>
+        <Modal isOpenned={isModalOpen} closeModal={handleCloseModal}>
+          <ModalInputContent
+            buttonText="Create"
+            disable={inputIsEmpty}
+            isLoading={creatingTask}
+            inputValue={inputValue}
+            handleChange={handleChangeInput}
+            handleClose={handleCloseModal}
+            handleConfirm={() => handleCreateNewTask(inputValue)}
+            title="Create new task"
+          />
+        </Modal>
         <S.Header>
-          <S.Title>{title}</S.Title>
+          <S.Input value={name} disabled />
           <S.TasksCount>
             {totalTasks > 1 ? `${totalTasks} tasks` : `${totalTasks} task`}
           </S.TasksCount>
-          <S.AddNewtaskButton onClick={handleCreateNewTask}>
-            <BsPlusLg />
-          </S.AddNewtaskButton>
         </S.Header>
-        {tasks.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            handleCheck={handleCheck}
-            handleRemove={handleRemove}
-            handleUpdate={handleUpdate}
-          />
-        ))}
+        <S.TasksWrapper>
+          {tasks.map((task) => (
+            <Task key={task.id} task={task} />
+          ))}
+          <AddButton onClick={handleOpenModal}>
+            <BsPlusLg />
+          </AddButton>
+        </S.TasksWrapper>
       </S.Wrapper>
     )
   )
