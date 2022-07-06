@@ -9,13 +9,13 @@ const GlobalStyle = createGlobalStyle`
     font-family: Roboto, --apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
   }
 
-  html {
+  body, html {
     font-size: 62.5%;
   }
 
-  html, body{
+  body{
     height: 100%;
-    background: ${theme.colors.grey};
+    background: ${theme.colors.white};
   }
 `
 
