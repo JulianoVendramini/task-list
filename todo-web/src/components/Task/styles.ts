@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components'
-import theme from '../../styles/theme'
 
 type Props = {
   isDone: boolean
@@ -22,32 +21,28 @@ export const Wrapper = styled.div`
 `
 
 export const Title = styled.span<Props>`
-  position: relative;
-
-  ${({ isDone }) => css`
+  ${({ isDone, theme }) => css`
     font-size: 2rem;
+    color: ${({ theme }) => theme.colors.darkBlue};
     cursor: pointer;
+
+    transition: color 1s ease-in-out;
 
     ${isDone &&
     css`
-      opacity: 0.7;
-      &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: -0.5rem;
-        display: block;
-        width: 0%;
-        height: 2px;
-        background: ${theme.colors.lightBlue};
-        animation: strikeitem 0.5s ease-out 0s forwards;
-      }
+      text-decoration: line-through;
+      text-decoration-color: ${theme.colors.black};
+      animation: strike 1s ease;
+      color: ${({ theme }) => theme.colors.lightBlue};
     `}
   `}
 
-  @keyframes strikeitem {
+  @keyframes strike {
+    from {
+      text-decoration-color: transparent;
+    }
     to {
-      width: calc(100% + 1rem);
+      text-decoration-color: auto;
     }
   }
 `

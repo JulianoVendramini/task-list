@@ -3,7 +3,6 @@ import { TaskRepository } from '@/infra/repositories'
 export namespace CheckTaskService {
   export type Params = {
     id: number
-    isDone: boolean
   }
 }
 

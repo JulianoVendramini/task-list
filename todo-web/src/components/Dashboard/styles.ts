@@ -7,8 +7,17 @@ export const Wrapper = styled.div`
 `
 
 export const TasksWrapper = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rem;
+`
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+
+  button {
+    width: 16rem;
+  }
 `

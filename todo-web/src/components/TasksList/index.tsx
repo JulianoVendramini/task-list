@@ -1,15 +1,17 @@
-import Task from '../Task'
+import { useState } from 'react'
 
+import Task from '../Task'
+import Modal from '../Modal'
+import InputModalContent from '../InputModalContent'
+
+import { AiOutlineDelete } from 'react-icons/ai'
 import { BsPlusLg } from 'react-icons/bs'
+import { toast } from 'react-toastify'
 
 import { TaskProps } from '../../types/task'
+
 import { useMutation } from '@apollo/client'
-import {
-  CHECK_TASK_MUTATION,
-  CREATE_TASK_MUTATION,
-  DELETE_TASK_MUTATION,
-  EDIT_TASK_MUTATION
-} from '../../graphql/mutations/task'
+import { CREATE_TASK_MUTATION } from '../../graphql/mutations/task'
 import { TASKS_LIST_QUERY } from '../../graphql/queries/tasks-list'
 
 import * as S from './styles'
@@ -18,80 +20,87 @@ type Props = {
   id: number
   title: string
   tasks: TaskProps[]
+  onDelete: (id: number) => void
+  isLoading: boolean
 }
 
-const TasksList = ({ id, title, tasks }: Props) => {
+const TasksList = ({ id, title, tasks, onDelete, isLoading }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [taskName, setTaskName] = useState('')
+
+  const TASK_COUNT = tasks.length
+
   const [createTask] = useMutation(CREATE_TASK_MUTATION)
-  const [deleteTask] = useMutation(DELETE_TASK_MUTATION)
-  const [editTask] = useMutation(EDIT_TASK_MUTATION)
-  const [checkTask] = useMutation(CHECK_TASK_MUTATION)
-
-  const totalTasks = tasks.length
-
-  const handleCheck = (id: number, isDone: boolean) => {
-    checkTask({
-      variables: {
-        task: {
-          id,
-          isDone
-        }
-      }
-    })
-  }
-
-  const handleRemove = (id: number) => {
-    deleteTask({
-      variables: { deleteTaskId: id },
-      refetchQueries: [{ query: TASKS_LIST_QUERY }]
-    })
-  }
-
-  const handleUpdate = (id: number) => {
-    editTask({
-      variables: {
-        task: {
-          id,
-          title: 'new title'
-        }
-      }
-    })
-  }
 
   const handleCreateNewTask = async () => {
+    if (!taskName) {
+      toast.error('Task name is required')
+      return
+    }
+
     await createTask({
       variables: {
         task: {
-          title: 'Nova tarefa',
+          title: taskName,
           tasksListId: id
         }
       },
       refetchQueries: [{ query: TASKS_LIST_QUERY }]
     })
+
+    toast.success('Task created successfully')
+    setTaskName('')
+    handleCloseModal()
+  }
+
+  const hadleOpenModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleDelete = () => {
+    onDelete(id)
   }
 
   return (
-    tasks && (
+    <>
+      <Modal closeModal={handleCloseModal} isOpenned={isModalOpen}>
+        <InputModalContent
+          title="Task name:"
+          inputValue={taskName}
+          onChange={(value) => setTaskName(value)}
+          closeModal={handleCloseModal}
+          onConfirm={handleCreateNewTask}
+          disabledButton={!taskName}
+        />
+      </Modal>
       <S.Wrapper>
-        <S.Header>
-          <S.Title>{title}</S.Title>
-          <S.TasksCount>
-            {totalTasks > 1 ? `${totalTasks} tasks` : `${totalTasks} task`}
-          </S.TasksCount>
-          <S.AddNewtaskButton onClick={handleCreateNewTask}>
-            <BsPlusLg />
-          </S.AddNewtaskButton>
-        </S.Header>
-        {tasks.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            handleCheck={handleCheck}
-            handleRemove={handleRemove}
-            handleUpdate={handleUpdate}
-          />
-        ))}
+        {isLoading ? (
+          <h1>loading...</h1>
+        ) : (
+          <>
+            <S.RemoveButton onClick={handleDelete}>
+              <AiOutlineDelete />
+            </S.RemoveButton>
+            <S.Header>
+              <S.Title>{title}</S.Title>
+              <S.TasksCount>
+                {TASK_COUNT > 1 ? `${TASK_COUNT} tasks` : `${TASK_COUNT} task`}
+              </S.TasksCount>
+              <S.AddNewtaskButton onClick={hadleOpenModal}>
+                <BsPlusLg />
+              </S.AddNewtaskButton>
+            </S.Header>
+            {tasks.map((task) => (
+              <Task key={task.id} task={task} />
+            ))}
+          </>
+        )}
       </S.Wrapper>
-    )
+    </>
   )
 }
 

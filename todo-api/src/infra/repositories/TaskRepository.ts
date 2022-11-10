@@ -70,7 +70,7 @@ export class TaskRepository {
         id: params.id
       },
       data: {
-        isDone: params.isDone
+        isDone: !task.isDone
       }
     })
 
